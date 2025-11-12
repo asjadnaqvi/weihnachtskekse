@@ -7,7 +7,12 @@ import plotly.express as px
 # ---------------------------------------------------
 st.set_page_config("🎄 Preis-Index Dashboard", layout="wide")
 
-st.title("🍪 Wie teuer sind Weihnachtskekse? 🎅")
+# Replace plain title with logo + title side by side
+col_title, col_logo = st.columns([3, 1])
+with col_title:
+    st.title("🍪 Wie teuer sind Weihnachtskekse? 🎅")
+with col_logo:
+    st.image("WIFO_logo.png", use_container_width=True)
 
 # ---------------------------------------------------
 # 1. LOAD EUROSTAT DATA
@@ -130,7 +135,7 @@ ingredient_color_map = {ing: COLOR_PALETTE[i % len(COLOR_PALETTE)] for i, ing in
 # ---------------------------------------------------
 # 5. VISUALIZATIONS
 # ---------------------------------------------------
-st.subheader("🥣 Zutatenverhältnisse")
+st.subheader("🥣 Zutatenverhältnisse (circa eine Portion)")
 fig_pie = px.pie(
     ingredients_df,
     values="quantity",
@@ -155,7 +160,7 @@ else:
         recipe_index,
         x="date",
         y="recipe_index",
-        labels={"recipe_index": "Rezept-Preisindex", "date": "Jahr"},
+        labels={"recipe_index": "Rezept-Preisindex (2015 = 100)", "date": "Jahr"},
     )
     fig_line.update_traces(
         line_color="#c41e3a",
@@ -172,7 +177,7 @@ if not ingredient_indices.empty:
         y="y",
         color="ingredient",
         title="Individuelle Zutaten-Preisindizes",
-        labels={"y": "Preisindex", "date": "Jahr", "ingredient": "Zutat"},
+        labels={"y": "Preisinde (2015 = 100)", "date": "Jahr", "ingredient": "Zutat"},
         color_discrete_map=ingredient_color_map,
     )
     fig_multi.update_traces(
@@ -185,8 +190,9 @@ if not ingredient_indices.empty:
 st.subheader("🧾 Zutaten (circa eine Portion)")
 st.dataframe(ingredients_df, hide_index=True, use_container_width=True)
 
+
 # ---------------------------------------------------
 # 6. FOOTER
 # ---------------------------------------------------
 st.markdown("---")
-st.caption("🎄 Prototyp-Dashboard — Eurostat COICOP 5-stelligen Preisindizes (PRC_HICP_MIDX). 2015 = 100.")
+st.caption("🎄 Prototyp-Dashboard — Eurostat COICOP 5-stelligen Preisindizes (PRC_HICP_MIDX).")
